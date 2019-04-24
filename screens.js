@@ -2077,21 +2077,17 @@ var PaymentScreenWidget = ScreenWidget.extend({
     finalize_validation: function() {
         var self = this;
         var order = this.pos.get_order();
-		console.log(order);
-		console.log(tickephant_code);
 		if (typeof tickephant_code != "undefined" && tickephant_code != null && tickephant_code.localeCompare("null") != 0){
-			console.log("dentro if");
 			
 			var lines = order.get_orderlines();
 			var products_list = new Array();
 			for (i=0; i<lines.length;i++){
-			console.log(lines[i]['product']);
 			products_list.push({
 				ean_product : lines[i]['product']['barcode'],
 				name : lines[i]['product']['display_name'],
 				price : lines[i]['product']['list_price'],
 				quantity : lines[i]['quantity'],
-				tax_percentage : 21
+				tax_percentage : 10
 			});
 			}
 			var result = order.export_as_JSON();
@@ -2100,7 +2096,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
 			var tax10 = 0;
 			var tax4 = 0;
 			for (var i = 0; i < taxes.length; i++) { 
-				console.log(taxes[i]);
 				switch (taxes[i]['name']){
 					case "S_IVA4":
 					tax4 = taxes[i]['amount'];
@@ -2120,7 +2115,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 				type: "POST",
 				url: 'http://api.tickephant.com/v1/invoices',
 				dataType: 'application/json',
-				data: {ean_invoice:result['uid'],amount_total:result['amount_total'], amount_return:result['amount_return'], iva_21:tax21,iva_10:tax10,iva_4:tax4,amount_discount:0,id_payment:1,comments:"Gracias por comprar en Abanca", ean_user:tickephant_code,token_office:'j0zN7ALTNkOCTJnsBGpK30eobzBUY3sH',irpf:0,products:products_list} ,
+				data: {ean_invoice:result['uid'],amount_total:result['amount_total'], amount_return:result['amount_return'], iva_21:tax21,iva_10:tax10,iva_4:tax4,amount_discount:0,id_payment:1,comments:"Gracias por comprar en Tickephant", ean_user:tickephant_code,token_office:'j0zN7ALTNkOCTJnsBGpK30eobzBUY3sH',irpf:0,products:products_list} ,
 				beforeSend: function () {
 				},
 				success:  function (response) {
@@ -2140,7 +2135,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 				type: "POST",
 				url: 'http://api.tickephant.com/v1/tickets',
 				dataType: 'application/json',
-				data: {ean_ticket:result['uid'],amount_total:result['amount_total'], amount_return:result['amount_return'], iva_21:tax21,iva_10:tax10,iva_4:tax4,amount_discount:0,cashier_name:"Abanca",id_payment:1,comments:"Gracias por comprar en Abanca", ean_user:tickephant_code,token_office:'j0zN7ALTNkOCTJnsBGpK30eobzBUY3sH',products:products_list} ,
+				data: {ean_ticket:result['uid'],amount_total:result['amount_total'], amount_return:result['amount_return'], iva_21:tax21,iva_10:tax10,iva_4:tax4,amount_discount:0,cashier_name:"Tickephant",id_payment:1,comments:"Gracias por comprar en Tickephant", ean_user:tickephant_code,token_office:'j0zN7ALTNkOCTJnsBGpK30eobzBUY3sH',products:products_list} ,
 				beforeSend: function () {
 				},
 				success:  function (response) {
